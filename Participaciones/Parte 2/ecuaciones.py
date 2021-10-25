@@ -4,8 +4,6 @@ from random import randrange
 from matplotlib import pyplot
 from matplotlib.animation import FuncAnimation
 
-init_notebook_mode(connected=True)
-
 # Read data
 x_data, y_data = [], []
 

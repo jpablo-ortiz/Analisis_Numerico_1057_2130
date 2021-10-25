@@ -16,4 +16,4 @@ def brentq_root_V2(f):
     sol = optimize.root_scalar(f, method='brentq', bracket=[0, 1])
     sol.root
 
-rentq_root_V2(function)
+#rentq_root_V2(function)
