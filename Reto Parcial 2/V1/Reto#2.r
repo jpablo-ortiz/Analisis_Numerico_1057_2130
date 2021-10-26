@@ -2,13 +2,13 @@ library(pracma)
 library(readxl)
 
 arch1 = read_excel("D:/Juanpa/U/Semestre 8/Analisis Numerico/Analisis_Numerico_1057_2130/Reto Parcial 2/DatosReto2.xls", sheet = "Itatira")
-arch2 = read_excel("D:/Juanpa/U/Semestre 8/Analisis Numerico/Analisis_Numerico_1057_2130/Reto Parcial 2/DatosReto2.xls", sheet = "Santa Quitï¿½ria")
+arch2 = read_excel("D:/Juanpa/U/Semestre 8/Analisis Numerico/Analisis_Numerico_1057_2130/Reto Parcial 2/DatosReto2.xls", sheet = "Santa Quit�ria")
 
-tempInteranArch1 = arch1$`Temp. Interna (ºC)`
+tempInteranArch1 = arch1$`Temp. Interna (�C)`
 diasArch1 = arch1$`Dia Juliano`
 horasArch1 = arch1$Hora
 
-tempInteranArch2 = arch2$`Temp. Interna (ºC)`
+tempInteranArch2 = arch2$`Temp. Interna (�C)`
 diasArch2 = arch2$`Dia Juliano`
 horasArch2 = arch2$Hora
 
@@ -30,18 +30,18 @@ yTrain = y[sample_i]
 yTrain = append(yTrain, y[0], 0) # Agregar el primer valor de y (al inicio)
 yTrain = append(yTrain, y[length(y)]) # Agregar el ultimo valor de y (al final)
 
-#Graficar todos los datos y tambiï¿½n la interpolaciï¿½n de los datos de entrenamiento
+# Graficar todos los datos y tambi�n la interpolaci�n de los datos de entrenamiento
 plot(x, y, type='l', ylab = "Temperatura interna", xlab = "Indice", col= "black")
 
 lines(spline(xTrain, yTrain, n=tamArch1), col= "purple")
 
 interpolacion = splinefun(xTrain, yTrain)
 
-# Calcular el error absoluto de la interpolaciï¿½n
+# Calcular el error absoluto de la interpolaci�n
 error_absoluto = sum(abs(interpolacion(x) - y))
 print(error_absoluto)
 
-# Calcular el error relativo de la interpolaciï¿½n
+# Calcular el error relativo de la interpolaci�n
 error_relativo = error_absoluto/sum(abs(y))
 print(error_relativo)
 
@@ -62,7 +62,7 @@ for(i in 1:tamArch2)
 
 xTest = indicesBajoCondicionesIguales
 yTest = c()
-# Interpolaciï¿½n de los datos de xTest
+# Interpolaci�n de los datos de xTest
 for(i in indicesBajoCondicionesIguales)
 {
     yTest = c(yTest, interpolacion(i))
@@ -73,21 +73,21 @@ plot(xTest, tempInteranArch2, ylab = "Temperatura interna", xlab = "Indice", typ
 
 lines(xTest, yTest, col= "blue")
 
-# Calcular el error mï¿½ximo de la interpolaciï¿½n
+# Calcular el error m�ximo de la interpolaci�n
 error_maximo = max(abs(yTest - tempInteranArch2))
 print(error_maximo)
-# Calcular el error mï¿½nimo de la interpolaciï¿½n
+# Calcular el error m�nimo de la interpolaci�n
 error_minimo = min(abs(yTest - tempInteranArch2))
 print(error_minimo)
-# Calcular el error medio de la interpolaciï¿½n
+# Calcular el error medio de la interpolaci�n
 error_medio = mean(abs(yTest - tempInteranArch2))
 print(error_medio)
-# Calcular el error absoluto de la interpolaciï¿½n
+# Calcular el error absoluto de la interpolaci�n
 error_absoluto = sum(abs(yTest - tempInteranArch2))
 print(error_absoluto)
-# Calcular el error relativo de la interpolaciï¿½n
+# Calcular el error relativo de la interpolaci�n
 error_relativo = error_absoluto/sum(abs(tempInteranArch2))
 print(error_relativo)
-# Calcular el error Cuadrï¿½tico Medio de la interpolaciï¿½n
+# Calcular el error Cuadr�tico Medio de la interpolaci�n
 error_cuadratico_medio = sqrt(sum((yTest - tempInteranArch2)^2)/length(yTest))
 print(error_cuadratico_medio)
