@@ -61,7 +61,7 @@ interpolaciones <- function(x, y, xTrain, yTrain) {
     plot(x, y, ylab = "Temperatura interna", xlab = "Indice", col= "black") 
 
     # Impresión de los datos originales}
-    lines(x, y, col = "black", lwd = 4)
+    lines(x, y, col = "black", lwd = 2)
 
     # ----------- Interpolación lineal -----------
     # (Los approx tienen la función approxfun())
@@ -75,20 +75,20 @@ interpolaciones <- function(x, y, xTrain, yTrain) {
     # Método FMM (fast marching method) (método de marcha rápida)
     # Este método utiliza Forsythe, Malcolm y Moler. Se ajusta un un cúbico exacto
     line1 = spline(xTrain, yTrain, method = "fmm")
-    #lines(line1, col = "red")
+    lines(line1, col = "red")
     # --------------------------------------------
     
     # ------ Interpolación Método Periodic -------
     # Método Spline Periodic
     # TODO - Creo que no se puede porque no es periodico los datos
-    line2 = spline(xTrain, yTrain, method = "periodic")
+    #line2 = spline(xTrain, yTrain, method = "periodic")
     #lines(line2, col = "blue")
     # --------------------------------------------
     
     # ------- Interpolación Método Natural -------
     # Método Spline Natural
     line3 = spline(xTrain, yTrain, method = "natural")
-    #lines(line3, col = "green")
+    lines(line3, col = "green")
     # --------------------------------------------
     
     # ------ Interpolación Método MonoH.FC -------
@@ -119,8 +119,8 @@ interpolaciones <- function(x, y, xTrain, yTrain) {
 
     # ------ Interpolación Método Lagrange -------
     # Método Lagrange de interpolación
-    #line8 = lagrangeInterp(xTrain, yTrain, xTrain)
-    #lines(line8, col = "grey")
+    line8 = lagrangeInterp(xTrain, yTrain, x)
+    lines(line8, col = "purple", lwd = 3)
     # --------------------------------------------
     
     # ------- Interpolación Método Newton --------
@@ -155,8 +155,7 @@ procesamientoDosEstaciones <- function(estacion1, estacion2) {
     x = seq(from = 1, to = tamArch1, by = 1)
     y = tempInteranArch1
 
-    # Seleccionar un 70% aleatorio de los datos para el entrenamiento 
-    #sample_i = sample(tamArch1, round(tamArch1 * 0.7))
+    # Seleccionar un 70% aleatorio de los datos para el entrenamiento y el 30% para el test
     sample_i = sample(2, tamArch1, replace = TRUE, prob = c(0.7, 0.3))
 
     # XTrain y YTrain el 70% de los datos
@@ -179,10 +178,17 @@ procesamientoDosEstaciones <- function(estacion1, estacion2) {
     yTest = append(yTest, y[0], 0) # Agregar el primer valor de y (al inicio)
     yTest = append(yTest, y[length(y)]) # Agregar el ultimo valor de y (al final)
 
+    #print(tamArch1)
+    
     #print(length(xTrain))
     #print(xTrain)
     #print(length(yTrain))
     #print(yTrain)
+
+    #print(length(xTest))
+    #print(xTest)
+    #print(length(yTest))
+    #print(yTest)
 
     interpolaciones(x, y, xTrain, yTrain)
 }
@@ -192,5 +198,5 @@ procesamientoDosEstaciones <- function(estacion1, estacion2) {
 # --------------------------------------------------
 
 procesamientoDosEstaciones("Itatira", "Santa Quitéria")
-procesamientoDosEstaciones("São Gonçalo do Amarante", "Pentecoste")
-procesamientoDosEstaciones("Quixadá", "quixeramobim")
+#procesamientoDosEstaciones("São Gonçalo do Amarante", "Pentecoste")
+#procesamientoDosEstaciones("Quixadá", "quixeramobim")
