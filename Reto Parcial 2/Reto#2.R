@@ -16,17 +16,8 @@ library(Metrics)
 library(philentropy)
 
 # --------------------------------------------------
-# --------------- Variables Globales ---------------
-# --------------------------------------------------
-
-# --------------------------------------------------
 # ---------------- Funciones -----------------------
 # --------------------------------------------------
-
-funInterpGenerator <- function(pp, xs) {
-    ppfun <- function(xs) ppval(pp, xs)
-    return(ppfun)
-}
 
 errores <- function(nombre, actual, predicted) {
     print(paste0("-------- Error de la interpolación ", nombre, "--------"))
@@ -56,13 +47,6 @@ errores <- function(nombre, actual, predicted) {
     indiceJaccard = jaccard(actual, predicted, testNA = FALSE)
     print(paste0("Indice de Jaccard: ", indiceJaccard))
 }
-
-interpolaciones <- function(x, y, xTrain, yTrain, xTest, yTest, tamArch1, tamArch2, diasArch1, diasArch2, horasArch1, horasArch2, estacion1, estacion2) {
-
-
-}
-
-# cicloDeUnaEstacion() <- function() {}
 
 # --------------------------------------------------
 # ---- Función carga de datos de dos Estaciones ----
@@ -111,18 +95,6 @@ procesamientoDosEstaciones <- function(estacion1, estacion2) {
     yTest = append(yTest, y[0], 0) # Agregar el primer valor de y (al inicio)
     yTest = append(yTest, y[length(y)]) # Agregar el ultimo valor de y (al final)
 
-    #print(tamArch1)
-    
-    #print(length(xTrain))
-    #print(xTrain)
-    #print(length(yTrain))
-    #print(yTrain)
-
-    #print(length(xTest))
-    #print(xTest)
-    #print(length(yTest))
-    #print(yTest)
-
     # -----------------------------------------------------------
     # ---------------------- Entrenamiento ---------------------- 
     # -----------------------------------------------------------
@@ -138,6 +110,7 @@ procesamientoDosEstaciones <- function(estacion1, estacion2) {
 
     # Datos de test
     yPredicted1 = funInterp1(xTest)
+    yPredicted1 = round(yPredicted1, 2)
     error1 = errores(paste0("Lineal - Test Data Vs Predicted Data - Estación Base: ", estacion1), yTest, yPredicted1)
     # --------------------------------------------
     
@@ -153,6 +126,7 @@ procesamientoDosEstaciones <- function(estacion1, estacion2) {
 
     # Datos de test
     yPredicted2 = funInterp2(xTest)
+    yPredicted2 = round(yPredicted2, 2)
     error2 = errores(paste0("FMM - Test Data Vs Predicted Data - Estación Base: ", estacion1), yTest, yPredicted2)
     # --------------------------------------------
     
@@ -167,6 +141,7 @@ procesamientoDosEstaciones <- function(estacion1, estacion2) {
 
     # Datos de test
     yPredicted3 = funInterp3(xTest)
+    yPredicted3 = round(yPredicted3, 2)
     error3 = errores(paste0("Natural - Test Data Vs Predicted Data - Estación Base: ", estacion1), yTest, yPredicted3)
     # --------------------------------------------
 
