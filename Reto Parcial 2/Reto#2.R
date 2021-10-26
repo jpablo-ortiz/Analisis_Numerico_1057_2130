@@ -138,7 +138,7 @@ procesamientoDosEstaciones <- function(estacion1, estacion2) {
 
     # Datos de test
     yPredicted1 = funInterp1(xTest)
-    error1 = errores("Lineal Ciudad Base", yTest, yPredicted1)
+    error1 = errores(paste0("Lineal - Test Data Vs Predicted Data - Estación Base: ", estacion1), yTest, yPredicted1)
     # --------------------------------------------
     
     # -------- Interpolación Método FMM ----------
@@ -153,7 +153,7 @@ procesamientoDosEstaciones <- function(estacion1, estacion2) {
 
     # Datos de test
     yPredicted2 = funInterp2(xTest)
-    error2 = errores("FMM Ciudad Base", yTest, yPredicted2)
+    error2 = errores(paste0("FMM - Test Data Vs Predicted Data - Estación Base: ", estacion1), yTest, yPredicted2)
     # --------------------------------------------
     
     # ------- Interpolación Método Natural -------
@@ -167,13 +167,13 @@ procesamientoDosEstaciones <- function(estacion1, estacion2) {
 
     # Datos de test
     yPredicted3 = funInterp3(xTest)
-    error3 = errores("Natural Ciudad Base", yTest, yPredicted3)
+    error3 = errores(paste0("Natural - Test Data Vs Predicted Data - Estación Base: ", estacion1), yTest, yPredicted3)
     # --------------------------------------------
 
     # Plot de los resultados de la interpolación de los datos de entrenamiento
     plot(xTrain, yTrain, type = "p", col = "black", lwd = 1,
             ylab = "Temperatura interna (Entrenamiento)", xlab = "Indice (Entrenamiento)", 
-            main = paste0("(Train Data) Ciudad: ", estacion1))
+            main = paste0("(Train Data) Estación: ", estacion1))
     lines(xTrain, yTrain, col = "black", lwd = 0.5)
     lines(lineInterp1, col = "blue", lwd = 1, type = "l", pch = 10, lty = 1)
     lines(lineInterp2, col = "red", lwd = 3, type = "l", pch = 10, lty = 1)    
@@ -182,7 +182,7 @@ procesamientoDosEstaciones <- function(estacion1, estacion2) {
     # Plot de los resultados de la interpolación de los datos de test
     plot(xTest, yTest, type = "p", col = "black", lwd = 1,
             ylab = "Temperatura interna (Test)", xlab = "Indice (Test)",
-            main = paste0("(Test Data) Ciudad: ", estacion1))
+            main = paste0("(Test Data) Estación: ", estacion1))
     lines(xTest, yTest, col = "black", lwd = 0.5)
     lines(xTest, yPredicted1, col = "blue", lwd = 1, type = "l", pch = 10, lty = 1)
     lines(xTest, yPredicted2, col = "red", lwd = 3, type = "l", pch = 10, lty = 1)
@@ -206,11 +206,11 @@ procesamientoDosEstaciones <- function(estacion1, estacion2) {
     }
 
     yPredicted1 = funInterp1(indicesBajoCondicionesIguales)
-    error1 = errores(paste0("(Interp Lineal) Estimación de ", estacion2, " a partir de ", estacion1), yPredicted1, yPredicted1)
+    error1 = errores(paste0("(Interp Lineal) Estimación de ", estacion2, " a partir de ", estacion1), tempInteranArch2, yPredicted1)
     yPredicted2 = funInterp2(indicesBajoCondicionesIguales)
-    error2 = errores(paste0("(Interp FMM) Estimación de ", estacion2, " a partir de ", estacion1), yPredicted2, yPredicted2)
+    error2 = errores(paste0("(Interp FMM) Estimación de ", estacion2, " a partir de ", estacion1), tempInteranArch2, yPredicted2)
     yPredicted3 = funInterp3(indicesBajoCondicionesIguales)
-    error3 = errores(paste0("(Interp Natural) Estimación de ", estacion2, " a partir de ", estacion1), yPredicted3, yPredicted3)
+    error3 = errores(paste0("(Interp Natural) Estimación de ", estacion2, " a partir de ", estacion1), tempInteranArch2, yPredicted3)
 
     plot(indicesBajoCondicionesIguales, tempInteranArch2, type = "p", col = "black", lwd = 1,
         ylab = "Temperatura interna", xlab = "Indice",
@@ -221,7 +221,6 @@ procesamientoDosEstaciones <- function(estacion1, estacion2) {
     lines(indicesBajoCondicionesIguales, yPredicted2, col = "red", lwd = 3, type = "l", pch = 10, lty = 1)
     lines(indicesBajoCondicionesIguales, yPredicted3, col = "green", lwd = 1, type = "l", pch = 10, lty = 1)
 
-
 }
 
 # --------------------------------------------------
@@ -229,5 +228,5 @@ procesamientoDosEstaciones <- function(estacion1, estacion2) {
 # --------------------------------------------------
 
 procesamientoDosEstaciones("Itatira", "Santa Quitéria")
-#procesamientoDosEstaciones("São Gonçalo do Amarante", "Pentecoste")
-#procesamientoDosEstaciones("Quixadá", "quixeramobim")
+procesamientoDosEstaciones("Araripe", "Santana do Cariri")
+procesamientoDosEstaciones("Quixadá", "quixeramobim")
