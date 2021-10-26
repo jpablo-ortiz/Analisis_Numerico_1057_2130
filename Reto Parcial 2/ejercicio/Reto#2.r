@@ -28,106 +28,38 @@ funInterpGenerator <- function(pp, xs) {
     return(ppfun)
 }
 
-errores() <- function(actual, predicted) {
-    # El calculo del error se hace con base al 30% de los datos y de estos es los datos reales y los datos predecidos
-    # actual <- c(1.1, 1.9, 3.0, 4.4, 5.0, 5.6)
-    # predicted <- c(0.9, 1.8, 2.5, 4.5, 5.0, 6.2)
-    
+errores <- function(nombre, actual, predicted) {
+    print(paste0("-------- Error de la interpolación ", nombre, "--------"))
+
     # Error Absoluto
     errorAbsoluto = ae(actual, predicted)
-    print(errorAbsoluto)
+    #print("Error Absoluto: ")
+    #print(errorAbsoluto)
 
     # Error Media
-    ErrorMedia = mae(actual, predicted)
-    print(ErrorMedia)
+    errorMedia = round(mae(actual, predicted), 2)
+    print(paste0("Error Media: ", errorMedia, "ºC"))
 
     # Error Máximo
-    maxError = max(errorAbsoluto)
-    print(maxError)
+    maxError = round(max(errorAbsoluto), 2)
+    print(paste0("Error Máximo: ", maxError, "ºC"))
 
     # Error Mínimo
-    minError = min(errorAbsoluto)
-    print(minError)
+    minError = round(min(errorAbsoluto), 2)
+    print(paste0("Error Mínimo: ", minError, "ºC"))
 
-    # Error medio cuadrado (EMC)
-    EMC = mse(actual, predicted)
-    print(EMC)
+    # Error medio cuadrático (EMC)
+    EMC = round(mse(actual, predicted), 2)
+    print(paste0("Error medio cuadrático: ", EMC, "ºC"))
 
     # Indice de Jaccard
-    IndiceJaccard = jaccard(actual, predicted, testNA = FALSE)
+    indiceJaccard = jaccard(actual, predicted, testNA = FALSE)
+    print(paste0("Indice de Jaccard: ", indiceJaccard))
 }
 
-interpolaciones <- function(x, y, xTrain, yTrain) {
-    plot(x, y, ylab = "Temperatura interna", xlab = "Indice", col= "black") 
+interpolaciones <- function(x, y, xTrain, yTrain, xTest, yTest, tamArch1, tamArch2, diasArch1, diasArch2, horasArch1, horasArch2, estacion1, estacion2) {
 
-    # Impresión de los datos originales}
-    lines(x, y, col = "black", lwd = 4)
 
-    # ----------- Interpolación lineal -----------
-    # (Los approx tienen la función approxfun())
-    line0 = approx(xTrain, yTrain)
-    #lines(line0, col = "purple")
-    # --------------------------------------------
-    
-    # (Los spline tienen los splinefun())
-    
-    # -------- Interpolación Método FMM ----------
-    # Método FMM (fast marching method) (método de marcha rápida)
-    # Este método utiliza Forsythe, Malcolm y Moler. Se ajusta un un cúbico exacto
-    line1 = spline(xTrain, yTrain, method = "fmm")
-    #lines(line1, col = "red")
-    # --------------------------------------------
-    
-    # ------ Interpolación Método Periodic -------
-    # Método Spline Periodic
-    # TODO - Creo que no se puede porque no es periodico los datos
-    line2 = spline(xTrain, yTrain, method = "periodic")
-    #lines(line2, col = "blue")
-    # --------------------------------------------
-    
-    # ------- Interpolación Método Natural -------
-    # Método Spline Natural
-    line3 = spline(xTrain, yTrain, method = "natural")
-    #lines(line3, col = "green")
-    # --------------------------------------------
-    
-    # ------ Interpolación Método MonoH.FC -------
-    # Método Spline MonoH.FC
-    # Calcula un spline de Hermite monotónico (creciente o decreciente) según el método de Fritsh y Carlson.
-    #line4 = spline(xTrain, yTrain, method = "monoH.FC")
-    ###lines(line4, col = "yellow")
-    # --------------------------------------------
-    
-    # -------- Interpolación Método Hyman --------
-    # Método Spline Hyman
-    # Calcula un spline cúbico monótono usando el filtrado de Hyman.
-    #line5 = spline(xTrain, yTrain, method = "hyman")
-    ###lines(line5, col = "orange")
-    # --------------------------------------------
-
-    # ---- Interpolación Método Barycentrico -----
-    # Método Barycentrico (barycentric lagrange) de interpolación
-    #line6 = barylag(xTrain, yTrain, xTrain)
-    ##lines(line6, col = "purple")
-    # --------------------------------------------
-    
-    # ------- Interpolación Método Cúbico --------
-    # Método spline cúbico de interpolación natural.
-    #line7 = cubicspline(xTrain, yTrain, xTrain)
-    ###lines(line7, col = "brown")
-    # --------------------------------------------
-
-    # ------ Interpolación Método Lagrange -------
-    # Método Lagrange de interpolación
-    #line8 = lagrangeInterp(xTrain, yTrain, xTrain)
-    #lines(line8, col = "grey")
-    # --------------------------------------------
-    
-    # ------- Interpolación Método Newton --------
-    # Método de interpolación de Newton
-    #line9 = newtonInterp(xTrain, yTrain, x)
-    ##lines(line9, col = "pink")
-    # --------------------------------------------
 }
 
 # cicloDeUnaEstacion() <- function() {}
@@ -179,12 +111,117 @@ procesamientoDosEstaciones <- function(estacion1, estacion2) {
     yTest = append(yTest, y[0], 0) # Agregar el primer valor de y (al inicio)
     yTest = append(yTest, y[length(y)]) # Agregar el ultimo valor de y (al final)
 
+    #print(tamArch1)
+    
     #print(length(xTrain))
     #print(xTrain)
     #print(length(yTrain))
     #print(yTrain)
 
-    interpolaciones(x, y, xTrain, yTrain)
+    #print(length(xTest))
+    #print(xTest)
+    #print(length(yTest))
+    #print(yTest)
+
+    # -----------------------------------------------------------
+    # ---------------------- Entrenamiento ---------------------- 
+    # -----------------------------------------------------------
+
+    # ----------- Interpolación lineal -----------
+    # (Los approx tienen la función approxfun())
+
+    # Función de la interpolación
+    funInterp1 = approxfun(xTrain, yTrain)
+
+    # Datos de entrenamiento
+    lineInterp1 = approx(xTrain, yTrain)
+
+    # Datos de test
+    yPredicted1 = funInterp1(xTest)
+    error1 = errores("Lineal Ciudad Base", yTest, yPredicted1)
+    # --------------------------------------------
+    
+    # -------- Interpolación Método FMM ----------
+    # Método FMM (fast marching method) (método de marcha rápida)
+    # Este método utiliza Forsythe, Malcolm y Moler. Se ajusta un un cúbico exacto
+
+    # Función de la interpolación
+    funInterp2 = splinefun(xTrain, yTrain, method = "fmm")
+    
+    # Datos de entrenamiento
+    lineInterp2 = spline(xTrain, yTrain, method = "fmm")
+
+    # Datos de test
+    yPredicted2 = funInterp2(xTest)
+    error2 = errores("FMM Ciudad Base", yTest, yPredicted2)
+    # --------------------------------------------
+    
+    # ------- Interpolación Método Natural -------
+    # Método Spline Natural
+
+    # Función de la interpolación
+    funInterp3 = splinefun(xTrain, yTrain, method = "natural")
+
+    # Datos de entrenamiento
+    lineInterp3 = spline(xTrain, yTrain, method = "natural")
+
+    # Datos de test
+    yPredicted3 = funInterp3(xTest)
+    error3 = errores("Natural Ciudad Base", yTest, yPredicted3)
+    # --------------------------------------------
+
+    # Plot de los resultados de la interpolación de los datos de entrenamiento
+    plot(xTrain, yTrain, type = "p", col = "black", lwd = 1,
+            ylab = "Temperatura interna (Entrenamiento)", xlab = "Indice (Entrenamiento)", 
+            main = paste0("(Train Data) Ciudad: ", estacion1))
+    lines(xTrain, yTrain, col = "black", lwd = 0.5)
+    lines(lineInterp1, col = "blue", lwd = 1, type = "l", pch = 10, lty = 1)
+    lines(lineInterp2, col = "red", lwd = 3, type = "l", pch = 10, lty = 1)    
+    lines(lineInterp3, col = "green", lwd = 1, type = "l", pch = 10, lty = 1)
+
+    # Plot de los resultados de la interpolación de los datos de test
+    plot(xTest, yTest, type = "p", col = "black", lwd = 1,
+            ylab = "Temperatura interna (Test)", xlab = "Indice (Test)",
+            main = paste0("(Test Data) Ciudad: ", estacion1))
+    lines(xTest, yTest, col = "black", lwd = 0.5)
+    lines(xTest, yPredicted1, col = "blue", lwd = 1, type = "l", pch = 10, lty = 1)
+    lines(xTest, yPredicted2, col = "red", lwd = 3, type = "l", pch = 10, lty = 1)
+    lines(xTest, yPredicted3, col = "green", lwd = 1, type = "l", pch = 10, lty = 1)
+
+    # -----------------------------------------------------------
+    # ------------ Predicción de datos Ciudad cercana ----------- 
+    # -----------------------------------------------------------
+
+    indicesBajoCondicionesIguales = c()
+
+    for(i in 1:tamArch2)
+    {
+        for(j in 1:tamArch1)
+        {
+            if((diasArch1[j] == diasArch2[i]) && (horasArch1[j] == horasArch2[i]))
+            {
+                indicesBajoCondicionesIguales = c(indicesBajoCondicionesIguales, j)
+            }
+        }
+    }
+
+    yPredicted1 = funInterp1(indicesBajoCondicionesIguales)
+    error1 = errores(paste0("(Interp Lineal) Estimación de ", estacion2, " a partir de ", estacion1), yPredicted1, yPredicted1)
+    yPredicted2 = funInterp2(indicesBajoCondicionesIguales)
+    error2 = errores(paste0("(Interp FMM) Estimación de ", estacion2, " a partir de ", estacion1), yPredicted2, yPredicted2)
+    yPredicted3 = funInterp3(indicesBajoCondicionesIguales)
+    error3 = errores(paste0("(Interp Natural) Estimación de ", estacion2, " a partir de ", estacion1), yPredicted3, yPredicted3)
+
+    plot(indicesBajoCondicionesIguales, tempInteranArch2, type = "p", col = "black", lwd = 1,
+        ylab = "Temperatura interna", xlab = "Indice",
+        main = paste0("Estimación de Temperatura interna de ", estacion2, " a partir de ", estacion1))
+    
+    lines(indicesBajoCondicionesIguales, tempInteranArch2, col = "black", lwd = 0.5)
+    lines(indicesBajoCondicionesIguales, yPredicted1, col = "blue", lwd = 1, type = "l", pch = 10, lty = 1)
+    lines(indicesBajoCondicionesIguales, yPredicted2, col = "red", lwd = 3, type = "l", pch = 10, lty = 1)
+    lines(indicesBajoCondicionesIguales, yPredicted3, col = "green", lwd = 1, type = "l", pch = 10, lty = 1)
+
+
 }
 
 # --------------------------------------------------
@@ -192,5 +229,5 @@ procesamientoDosEstaciones <- function(estacion1, estacion2) {
 # --------------------------------------------------
 
 procesamientoDosEstaciones("Itatira", "Santa Quitéria")
-procesamientoDosEstaciones("São Gonçalo do Amarante", "Pentecoste")
-procesamientoDosEstaciones("Quixadá", "quixeramobim")
+#procesamientoDosEstaciones("São Gonçalo do Amarante", "Pentecoste")
+#procesamientoDosEstaciones("Quixadá", "quixeramobim")
