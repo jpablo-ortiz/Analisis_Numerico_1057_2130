@@ -2,7 +2,7 @@ library(pracma)
 library(readxl)
 
 arch1 = read_excel("D:/Juanpa/U/Semestre 8/Analisis Numerico/Analisis_Numerico_1057_2130/Reto Parcial 2/DatosReto2.xls", sheet = "Itatira")
-arch2 = read_excel("D:/Juanpa/U/Semestre 8/Analisis Numerico/Analisis_Numerico_1057_2130/Reto Parcial 2/DatosReto2.xls", sheet = "Santa Quitï¿½ria")
+arch2 = read_excel("D:/Juanpa/U/Semestre 8/Analisis Numerico/Analisis_Numerico_1057_2130/Reto Parcial 2/DatosReto2.xls", sheet = "Santa Quitéria")
 
 tempInteranArch1 = arch1$`Temp. Interna (ºC)`
 diasArch1 = arch1$`Dia Juliano`

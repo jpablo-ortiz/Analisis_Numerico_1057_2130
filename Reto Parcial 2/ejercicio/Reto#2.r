@@ -16,13 +16,17 @@ library(Metrics)
 library(philentropy)
 
 # --------------------------------------------------
-# ---------------- Funciones ------------------------
+# --------------- Variables Globales ---------------
 # --------------------------------------------------
 
 minX = min(0)
 maxX = max(720)
 minY = min(0)
 maxY = max(50)
+
+# --------------------------------------------------
+# ---------------- Funciones -----------------------
+# --------------------------------------------------
 
 funInterpGenerator <- function(pp, xs) {
     ppfun <- function(xs) ppval(pp, xs)
@@ -53,7 +57,7 @@ errores() <- function(actual, predicted) {
     EMC = mse(actual, predicted)
     print(EMC)
 
-    # Índice de Jaccard
+    # Indice de Jaccard
     IndiceJaccard = jaccard(actual, predicted, testNA = FALSE)
 }
 
@@ -73,7 +77,7 @@ cicloDeInterpolaciones <- function(x, y, xTrain, yTrain) {
     # (Los spline tienen los splinefun())
     
     # Método FMM (fast marching method) (método de marcha rápida)
-    # Este método utiliza Forsythe, Malcolm y Moler. Se ajústa un un cúbico exacto
+    # Este método utiliza Forsythe, Malcolm y Moler. Se ajusta un un cúbico exacto
     line1 = spline(xTrain, yTrain, method = "fmm")
     #lines(line1, col = "red")
     
@@ -119,35 +123,42 @@ cicloDeInterpolaciones <- function(x, y, xTrain, yTrain) {
 # ------------ Cargar datos Principales ------------
 # --------------------------------------------------
 
-arch1 = read_excel("D:/Juanpa/U/Semestre 8/Analisis Numerico/Analisis_Numerico_1057_2130/Reto Parcial 2/DatosReto2.xls", sheet = "Itatira")
-arch2 = read_excel("D:/Juanpa/U/Semestre 8/Analisis Numerico/Analisis_Numerico_1057_2130/Reto Parcial 2/DatosReto2.xls", sheet = "Santa Quitéria")
+procesamientoDosEstaciones("Itatira", "Santa Quitéria")
+procesamientoDosEstaciones("Pentecoste", "São Gonçalo do Amarante")
+procesamientoDosEstaciones("Quixadá", "quixeramobim")
 
-tempInteranArch1 = arch1$`Temp. Interna (ºC)`
-diasArch1 = arch1$`Dia Juliano`
-horasArch1 = arch1$Hora
+procesamientoDosEstaciones(estacion1, estacion2) <- function(estacion1, estacion2) {
 
-tempInteranArch2 = arch2$`Temp. Interna (ºC)`
-diasArch2 = arch2$`Dia Juliano`
-horasArch2 = arch2$Hora
+    arch1 = read_excel("D:/Juanpa/U/Semestre 8/Analisis Numerico/Analisis_Numerico_1057_2130/Reto Parcial 2/DatosReto2.xls", sheet = estacion1)
+    arch2 = read_excel("D:/Juanpa/U/Semestre 8/Analisis Numerico/Analisis_Numerico_1057_2130/Reto Parcial 2/DatosReto2.xls", sheet = estacion2)
 
-tamArch1 = length(tempInteranArch1)
-tamArch2 = length(tempInteranArch2)
+    tempInteranArch1 = arch1$`Temp. Interna (ºC)`
+    diasArch1 = arch1$`Dia Juliano`
+    horasArch1 = arch1$Hora
 
-x = seq(from = 1, to = 720, by = 1)
-y = tempInteranArch1
+    tempInteranArch2 = arch2$`Temp. Interna (ºC)`
+    diasArch2 = arch2$`Dia Juliano`
+    horasArch2 = arch2$Hora
 
-# Seleccionar un 70% aleatorio de los datos para el entrenamiento 
-sample_i = sample(720, round(720*0.7))
+    tamArch1 = length(tempInteranArch1)
+    tamArch2 = length(tempInteranArch2)
 
-# XTrain y YTrain el 70% de los datos
-# Se toma el primero y el último valor de X y Y para manejar una correcta interpolación
-xTrain = x[sample_i]
-xTrain = append(xTrain, x[0], 0) # Agregar el primer valor de x (al inicio)
-xTrain = append(xTrain, x[length(x)]) # Agregar el ultimo valor de x (al final)
+    x = seq(from = 1, to = 720, by = 1)
+    y = tempInteranArch1
 
-yTrain = y[sample_i]
-yTrain = append(yTrain, y[0], 0) # Agregar el primer valor de y (al inicio)
-yTrain = append(yTrain, y[length(y)]) # Agregar el ultimo valor de y (al final)
+    # Seleccionar un 70% aleatorio de los datos para el entrenamiento 
+    sample_i = sample(720, round(720*0.7))
 
-cicloDeInterpolaciones(x, y, xTrain, yTrain)
+    # XTrain y YTrain el 70% de los datos
+    # Se toma el primero y el último valor de X y Y para manejar una correcta interpolación
+    xTrain = x[sample_i]
+    xTrain = append(xTrain, x[0], 0) # Agregar el primer valor de x (al inicio)
+    xTrain = append(xTrain, x[length(x)]) # Agregar el ultimo valor de x (al final)
 
+    yTrain = y[sample_i]
+    yTrain = append(yTrain, y[0], 0) # Agregar el primer valor de y (al inicio)
+    yTrain = append(yTrain, y[length(y)]) # Agregar el ultimo valor de y (al final)
+
+}
+
+# El calculo del error se hace con base al 30% de los datos y de estos es los datos reales y los datos predecidos
