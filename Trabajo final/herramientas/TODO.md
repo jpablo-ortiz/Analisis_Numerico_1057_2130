@@ -20,3 +20,9 @@ deactivate
 
 # Para instalar dependencias en requirements.txt
 py -m pip install -r requirements.txt
+
+
+https://pybonacci.org/2020/09/16/modelo-sir-modelo-epidemiologico-con-python/
+The Hodgkin-Huxley
+
+https://www.bonaccorso.eu/2017/08/19/hodgkin-huxley-spiking-neuron-model-python/
